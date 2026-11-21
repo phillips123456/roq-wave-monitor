@@ -464,8 +464,7 @@ SPIKES.forEach(([s,d],i)=>{
 })();
 </script>
 
-<script>/* report height to an embedding page (Squarespace frame) */
-(function(){function send(){try{parent.postMessage({roqWaveHeight:document.documentElement.scrollHeight},"*")}catch(e){}}
-window.addEventListener("load",function(){send();setTimeout(send,800)});window.addEventListener("resize",send);
-try{new ResizeObserver(send).observe(document.body)}catch(e){}})();</script>
+<script>/* report content height to an embedding page (Squarespace frame); measures content, not the frame, so it cannot feed back */
+(function(){var last=0;function send(){try{var w=document.querySelector(".wrap")||document.body;var h=Math.ceil(w.getBoundingClientRect().bottom+window.scrollY+48);if(Math.abs(h-last)>4){last=h;parent.postMessage({roqWaveHeight:h},"*")}}catch(e){}}
+window.addEventListener("load",function(){send();setTimeout(send,800);setTimeout(send,2500)});window.addEventListener("resize",send);})();</script>
 </body></html>
