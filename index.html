@@ -430,7 +430,12 @@ SPIKES.forEach(([s,d],i)=>{
   let d='';
   for(let k=0;k<=60;k++){const t=0.71+k*(0.26/60);d+=(k?'L':'M')+X(t).toFixed(1)+' '+Y(t).toFixed(1);}
   mk('path',{d,fill:'none',stroke:'var(--red)','stroke-opacity':'0.28','stroke-width':'14','stroke-linecap':'round'});
-  lab(X(0.92),MID-10,'higher-risk zone');
+  lab(X(0.92),MID-10,'higher-risk zone').setAttribute('fill','var(--red)');
+  // calmest stretch: the late rise into the peak (fewest shock starts, 2006 to 2026)
+  d='';
+  for(let k=0;k<=40;k++){const t=0.28+k*(0.22/40);d+=(k?'L':'M')+X(t).toFixed(1)+' '+Y(t).toFixed(1);}
+  mk('path',{d,fill:'none',stroke:'var(--green)','stroke-opacity':'0.28','stroke-width':'14','stroke-linecap':'round'});
+  lab(X(0.40),MID-10,'calmest stretch').setAttribute('fill','var(--green)');
   // wave
   d='';
   for(let k=0;k<=120;k++){const t=k/120;d+=(k?'L':'M')+X(t).toFixed(1)+' '+Y(t).toFixed(1);}
