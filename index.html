@@ -100,6 +100,16 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
 .cell.good .dn{color:var(--green)}
 .cell.now{border-color:var(--fg);box-shadow:0 0 0 1px var(--fg)}
 .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:11px;color:var(--fg-2)}
+.map-toggle{display:none;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-size:11.5px;color:var(--fg-2)}
+@media (max-width:600px){
+  .map-toggle{display:flex}
+  #map:not(.all){min-width:0}
+  #map:not(.all) th:nth-child(n+2),#map:not(.all) td:nth-child(n+2){display:none}
+  #map:not(.all)[data-vol="0"] th:nth-child(2),#map:not(.all)[data-vol="0"] td:nth-child(2),
+  #map:not(.all)[data-vol="1"] th:nth-child(3),#map:not(.all)[data-vol="1"] td:nth-child(3),
+  #map:not(.all)[data-vol="2"] th:nth-child(4),#map:not(.all)[data-vol="2"] td:nth-child(4){display:table-cell}
+  #map:not(.all) td.ph{white-space:normal}
+}
 .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 
 /* volatility watch */
@@ -234,8 +244,9 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
     <div class="panel-hdr"><span class="panel-title">What usually follows</span><span class="badge">2006 to 2026</span></div>
     <div class="cycle" id="cycle"></div>
     <div class="panel-body">
-      <p class="lead">Each cell shows how often the S&amp;P 500 was <strong>higher 7 sessions later</strong> and, below it, how often it <strong>fell 2% or more</strong>, by wave phase and volatility conditions. On a typical day those figures are 60% and 15%. Today sits at <strong>the trough, still falling, in stressed conditions</strong>: about normal odds of a gain, with sharp drops about one and a half times as common as usual. The wave cycle and the statistical reading agree. The wave cycle and the statistical reading agree.</p>
+      <p class="lead">Each cell shows how often the S&amp;P 500 was <strong>higher 7 sessions later</strong> and, below it, how often it <strong>fell 2% or more</strong>, by wave phase and volatility conditions. On a typical day those figures are 60% and 15%. Today sits at <strong>the trough, still falling, in stressed conditions</strong>: about normal odds of a gain, with sharp drops about one and a half times as common as usual. The wave cycle and the statistical reading agree.</p>
       <div class="tbl-wrap" style="margin-top:12px"><table class="map" id="map"></table></div>
+      <div class="map-toggle"><span id="mapNote">Showing today's volatility conditions.</span><button id="mapAll" class="step-btn" type="button" aria-expanded="false">Show all</button></div>
       <div class="legend">
         <span><span class="sw" style="background:var(--green-dim);outline:1px solid var(--green)"></span>Lower drop risk than normal</span>
         <span><span class="sw" style="background:var(--red-dim);outline:1px solid var(--red)"></span>Drop risk 1.5x normal or more</span>
@@ -392,6 +403,9 @@ MAP.forEach((row,i)=>{
   h+='</tr>';
 });
 map.innerHTML=h+'</tbody>';
+map.dataset.vol=NOW_VOL;
+(function(){var b=document.getElementById('mapAll'),n=document.getElementById('mapNote');if(!b)return;
+b.addEventListener('click',function(){var on=map.classList.toggle('all');b.textContent=on?'Show today only':'Show all';b.setAttribute('aria-expanded',on?'true':'false');n.textContent=on?'All volatility conditions. Swipe to see every column.':"Showing today's volatility conditions.";});})();
 
 const sp=document.getElementById('spikes');
 const maxv=60;
