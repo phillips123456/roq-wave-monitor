@@ -160,6 +160,9 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
 /* arc */
 .arc-wrap{padding:14px 16px 12px}
 #arcSvg{display:block;width:100%;height:auto;overflow:visible}
+.now-pulse{transform-box:fill-box;transform-origin:center;animation:nowPulse 1.8s ease-out infinite}
+@keyframes nowPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(2);opacity:0}}
+@media (prefers-reduced-motion: reduce){.now-pulse{animation:none;opacity:.5}}
 .arc-node{cursor:pointer}
 .arc-node:focus{outline:none}
 .arc-node:focus-visible circle.ring{stroke:var(--fg);stroke-width:2}
@@ -455,7 +458,10 @@ SPIKES.forEach(([s,d],i)=>{
     g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(i);}});
     nodes.push({g,t});
   });
-  const nowTag=mk('text',{x:X(T[CYCLE_PHASE]),y:Y(T[CYCLE_PHASE])-36,'text-anchor':'middle','font-size':'10','font-weight':'600','font-family':'IBM Plex Mono, monospace',fill:'var(--fg)'});
+  // current position: bright ring plus a soft pulse so it stands out
+  mk('circle',{class:'now-pulse',cx:X(T[CYCLE_PHASE]),cy:Y(T[CYCLE_PHASE]),r:14,fill:'none',stroke:'var(--warn)','stroke-width':'3','pointer-events':'none'});
+  mk('circle',{cx:X(T[CYCLE_PHASE]),cy:Y(T[CYCLE_PHASE]),r:15,fill:'none',stroke:'var(--warn)','stroke-width':'3','pointer-events':'none'});
+  const nowTag=mk('text',{x:X(T[CYCLE_PHASE]),y:Y(T[CYCLE_PHASE])-28,'text-anchor':'middle','font-size':'13','font-weight':'700','letter-spacing':'1','font-family':'IBM Plex Mono, monospace',fill:'var(--warn)'});
   nowTag.textContent='NOW';
 
   let sel=null;
