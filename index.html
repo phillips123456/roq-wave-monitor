@@ -66,7 +66,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px
 .g{color:var(--green)}.r{color:var(--red)}.w{color:var(--warn)}.b{color:var(--bc-col)}
 
 .main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:12px;align-items:start}
-@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.main{display:flex;flex-direction:column;gap:12px}.main>.col{display:contents}.main .m-first{order:1}.main .m-second{order:2}.main .col>*{order:3}.main .col>.m-first{order:1}.main .col>.m-second{order:2}}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;overflow:hidden;min-width:0}
 .panel-hdr{padding:11px 16px 9px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -210,7 +210,7 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
 <div class="main">
 <div class="col">
 
-  <div class="panel">
+  <div class="panel m-first">
     <div class="panel-hdr"><span class="panel-title">Wave cycle</span><span class="badge" id="arcBadge">Now: Peak</span></div>
     <div class="arc-wrap">
       <svg id="arcSvg" viewBox="0 0 640 200" role="img" aria-label="Wave cycle with seven phases; the current cycle position is Trough, still falling"></svg>
@@ -280,7 +280,7 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
 </div>
 <div class="col">
 
-  <div class="panel">
+  <div class="panel m-second">
     <div class="panel-hdr"><span class="panel-title">What I'm watching</span></div>
     <div class="panel-body">
       <p class="lead">A fifth day in the trough, and the heaviest selling of this decline. The S&amp;P 500 fell more than 3.5% and the Nasdaq 100 fund more than 5.5%, and volatility reached its most extreme reading of the move. This is the kind of day the defensive mix is built for: the large-cap tilt lost about three quarters as much as a growth tilt. Internal momentum made another new low. Troughs that run this long often have a few more sessions in them, and momentum frequently bottoms after the wave itself has turned. What I'm watching for is the wave and momentum turning up together, with volatility coming back down. The model stays defensively long until that happens.</p>
