@@ -66,7 +66,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px
 .g{color:var(--green)}.r{color:var(--red)}.w{color:var(--warn)}.b{color:var(--bc-col)}
 
 .main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:12px;align-items:start}
-@media (max-width:900px){.main{display:flex;flex-direction:column;gap:12px}.main>.col{display:contents}.main .m-first{order:1}.main .m-second{order:2}.main .col>*{order:3}.main .col>.m-first{order:1}.main .col>.m-second{order:2}}
+@media (max-width:900px){.main{display:flex;flex-direction:column;gap:12px}.main>.col{display:contents}.main .m-first{order:1}.main .m-second{order:2}.main .col>*{order:4}.main .col>.m-first{order:1}.main .col>.m-second{order:2}.main .col>.m-third{order:3}}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;overflow:hidden;min-width:0}
 .panel-hdr{padding:11px 16px 9px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -244,7 +244,7 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
     </div>
   </div>
 
-  <div class="panel">
+  <div class="panel m-third">
     <div class="panel-hdr"><span class="panel-title">Volatility watch</span><span class="badge">Trough; session 15</span></div>
     <div class="panel-body">
       <p class="lead">Major volatility shocks have rarely started at the top of a wave. They tend to begin on the way down: about half began <strong>one to three weeks after the peak zone ended</strong>, a stretch that covers less than a third of trading days. This shows where risk has been concentrated, not a forecast of any single event. The wave left its peak zone on Nov 2. A major volatility shock began on Nov 5, session 4 after the peak zone ended: on the back side of the wave, as this framework describes, though a couple of sessions earlier than the stretch where most have started. Volatility eased slightly on Nov 6 and dropped back to the calm range on Nov 9.</p>
