@@ -1,0 +1,471 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ROQ Wave Monitor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: summary strip, then a wide column (cycle, outlook table, volatility watch) beside a narrow column (watch notes, current read, results, state key). */
+:root {
+  --bg:#0d0f0e; --bg-card:#131614; --bg-elevated:#1a1d1b;
+  --border:rgba(255,255,255,0.07); --border-hi:rgba(255,255,255,0.16);
+  --fg:#e8ebe9; --fg-2:#8a9490; --fg-3:#5d6763;
+  --green:#22c55e; --green-dim:rgba(34,197,94,0.13);
+  --blue:#3987e5; --blue-dim:rgba(57,135,229,0.13);
+  --red:#e66767; --red-dim:rgba(230,103,103,0.14);
+  --warn:#fab219; --warn-dim:rgba(250,178,25,0.14);
+  --be-col:#22c55e; --bc-col:#3987e5; --def-col:#e66767;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --sans:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:#f3f5f4; --bg-card:#ffffff; --bg-elevated:#eaeceb;
+    --border:rgba(0,0,0,0.08); --border-hi:rgba(0,0,0,0.18);
+    --fg:#111412; --fg-2:#4a5450; --fg-3:#7d8682;
+    --green:#16a34a; --green-dim:rgba(22,163,74,0.11);
+    --blue:#2a78d6; --blue-dim:rgba(42,120,214,0.11);
+    --red:#d03b3b; --red-dim:rgba(208,59,59,0.11);
+    --warn:#b86e00; --warn-dim:rgba(208,128,0,0.13);
+    --be-col:#16a34a; --bc-col:#2a78d6; --def-col:#d03b3b;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"] {
+  --bg:#f3f5f4; --bg-card:#ffffff; --bg-elevated:#eaeceb;
+  --border:rgba(0,0,0,0.08); --border-hi:rgba(0,0,0,0.18);
+  --fg:#111412; --fg-2:#4a5450; --fg-3:#7d8682;
+  --green:#16a34a; --green-dim:rgba(22,163,74,0.11);
+  --blue:#2a78d6; --blue-dim:rgba(42,120,214,0.11);
+  --red:#d03b3b; --red-dim:rgba(208,59,59,0.11);
+  --warn:#b86e00; --warn-dim:rgba(208,128,0,0.13);
+  --be-col:#16a34a; --bc-col:#2a78d6; --def-col:#d03b3b;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.5;
+  padding-block:0 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:18px 0 14px;border-bottom:1px solid var(--border)}
+.brand{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--green);text-transform:uppercase}
+.header-sub{font-size:12px;color:var(--fg-2)}
+.as-of{font-family:var(--mono);font-size:11px;color:var(--fg-3)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:4px;border:1px solid}
+.pill.bc{color:var(--bc-col);border-color:var(--bc-col);background:var(--blue-dim)}
+.pill.def{color:var(--def-col);border-color:var(--def-col);background:var(--red-dim)}
+.pill.quiet{color:var(--green);border-color:var(--green);background:var(--green-dim)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.preview-note{margin-top:10px;font-size:11px;color:var(--warn);font-family:var(--mono)}
+
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:14px 0}
+.chip{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px 14px;min-width:0}
+.chip-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-3);margin-bottom:5px}
+.chip-val{font-family:var(--mono);font-size:19px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.chip-sub{font-size:11px;color:var(--fg-2);margin-top:4px}
+.g{color:var(--green)}.r{color:var(--red)}.w{color:var(--warn)}.b{color:var(--bc-col)}
+
+.main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:12px;align-items:start}
+@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;overflow:hidden;min-width:0}
+.panel-hdr{padding:11px 16px 9px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.panel-title{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-2)}
+.badge{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px;border:1px solid var(--border-hi);color:var(--fg-3);white-space:nowrap}
+.badge.sig{color:var(--green);border-color:var(--green);background:var(--green-dim)}
+.badge.desc{color:var(--warn);border-color:var(--warn);background:var(--warn-dim)}
+.panel-body{padding:14px 16px}
+.lead{font-size:12.5px;color:var(--fg-2);line-height:1.6;max-width:68ch}
+.lead strong{color:var(--fg);font-weight:600}
+
+/* cycle */
+.cycle{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
+.cstep{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:3px;color:var(--fg-3);border:1px solid transparent;white-space:nowrap}
+.cstep.on{color:var(--bc-col);border-color:var(--bc-col);background:var(--blue-dim)}
+.carrow{color:var(--fg-3);font-size:10px}
+
+/* risk map */
+.tbl-wrap{overflow-x:auto}
+table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px}
+.map th{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3);text-align:left;padding:2px 6px}
+.map th.vb{text-align:center}
+.map td.ph{font-size:12px;color:var(--fg-2);padding:6px;white-space:nowrap}
+.map td.ph.on{color:var(--fg);font-weight:600}
+.cell{border-radius:4px;padding:7px 8px;text-align:center;background:var(--bg-elevated);border:1px solid transparent;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.cell .up{font-size:14px;font-weight:600;display:block;line-height:1.1}
+.cell .dn{font-size:10.5px;color:var(--fg-2);display:block;margin-top:2px}
+.cell.good{background:var(--green-dim)}
+.cell.bad{background:var(--red-dim)}
+.cell.bad .dn{color:var(--red)}
+.cell.good .dn{color:var(--green)}
+.cell.now{border-color:var(--fg);box-shadow:0 0 0 1px var(--fg)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:11px;color:var(--fg-2)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+/* volatility watch */
+.timeline{position:relative;margin:18px 4px 6px;height:34px}
+.tl-bar{position:absolute;left:0;right:0;top:12px;height:10px;border-radius:5px;background:var(--bg-elevated);overflow:hidden;display:flex}
+.tl-seg{height:100%}
+.tl-tick{position:absolute;top:26px;font-family:var(--mono);font-size:10px;color:var(--fg-3);transform:translateX(-50%);white-space:nowrap}
+.tl-now{position:absolute;top:2px;transform:translateX(-50%);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--fg);white-space:nowrap}
+.tl-now::after{content:"";position:absolute;left:50%;top:13px;width:2px;height:16px;margin-left:-1px;background:var(--fg)}
+.checks{display:grid;gap:0;margin-top:22px}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);align-items:center}
+.crow:last-child{border-bottom:none}
+.ck{font-size:12px;color:var(--fg-2)}
+.cv{font-family:var(--mono);font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+.bars{display:grid;grid-template-columns:150px minmax(0,1fr) 44px;gap:6px 10px;align-items:center;margin-top:12px;font-size:11.5px}
+.bars .lbl{color:var(--fg-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars .lbl.on{color:var(--fg);font-weight:600}
+.bars .track{position:relative;height:8px;background:var(--bg-elevated);border-radius:4px}
+.bars .fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--red);opacity:.75}
+.bars .base{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg-3)}
+.bars .num{font-family:var(--mono);font-size:11px;text-align:right;color:var(--fg-2)}
+@media (max-width:480px){.bars{grid-template-columns:110px minmax(0,1fr) 38px}}
+
+/* checklists */
+.ok{color:var(--green)}.no{color:var(--red)}.na{color:var(--fg-3)}
+.ctitle{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-3);margin:2px 0 6px}
+.verdict{margin-top:10px;font-size:12px;color:var(--fg-2);line-height:1.55;padding-top:8px;border-top:1px solid var(--border)}
+.verdict strong{color:var(--fg)}
+
+/* performance */
+.perf{width:100%;border-collapse:collapse;font-size:12px}
+.perf th{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3);text-align:right;padding:4px 0 6px}
+.perf th:first-child{text-align:left}
+.perf td{padding:6px 0;border-top:1px solid var(--border);text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.perf td:first-child{text-align:left;font-family:var(--sans);color:var(--fg-2)}
+.perf tr.live td:first-child{color:var(--fg);font-weight:600}
+.note{font-size:10.5px;color:var(--fg-3);line-height:1.55;margin-top:8px}
+
+/* findings */
+.find{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 10px;align-items:start}
+.find .tag{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.04em;padding:2px 6px;border-radius:3px;white-space:nowrap;text-transform:uppercase;margin-top:2px}
+.tag.sig{color:var(--green);background:var(--green-dim)}
+.tag.bord{color:var(--warn);background:var(--warn-dim)}
+.tag.no{color:var(--red);background:var(--red-dim)}
+.find .txt{font-size:12px;color:var(--fg-2);line-height:1.5}
+.find .txt strong{color:var(--fg);font-weight:600}
+
+/* arc */
+.arc-wrap{padding:14px 16px 12px}
+#arcSvg{display:block;width:100%;height:auto;overflow:visible}
+.arc-node{cursor:pointer}
+.arc-node:focus{outline:none}
+.arc-node:focus-visible circle.ring{stroke:var(--fg);stroke-width:2}
+.step-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.step-btn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:5px 12px;cursor:pointer;background:var(--bg-elevated);border:1px solid var(--border-hi);color:var(--fg-2)}
+.step-btn.primary{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.step-btn:hover{border-color:var(--fg-2);color:var(--fg)}
+.step-btn:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.readout{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.ro{background:var(--bg-elevated);border-radius:4px;padding:8px 10px;min-width:0}
+.ro-k{font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--fg-3)}
+.ro-v{font-family:var(--mono);font-size:15px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+.map tr.sel td.ph{color:var(--fg);font-weight:600}
+.map tr.sel .cell{border-color:var(--border-hi)}
+.bars .lbl.sel{color:var(--fg);font-weight:600}
+.cstep.sel{color:var(--fg);border-color:var(--border-hi)}
+
+.defs{display:flex;flex-direction:column;gap:12px}
+.sdef{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.sdef:last-child{border-bottom:none;padding-bottom:0}
+.sdef .pill{grid-row:span 3;align-self:start;margin-top:1px}
+.def-name{font-size:12.5px;font-weight:600;color:var(--fg)}
+.def-mix{font-family:var(--mono);font-size:11px;color:var(--fg-2)}
+.def-txt{font-size:12px;color:var(--fg-2);line-height:1.5}
+.pill.ebp{color:var(--be-col);border-color:var(--be-col);background:var(--green-dim)}
+.sdef.now .def-name::after{content:'  current';font-family:var(--mono);font-size:10px;font-weight:600;color:var(--def-col);letter-spacing:.05em;text-transform:uppercase}
+
+.sig{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px 16px;font-size:12px;color:var(--fg-2);line-height:1.6}
+.sig strong{color:var(--fg)}
+.insight{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:12px 16px;font-size:12.5px;color:var(--fg-2);line-height:1.65}
+.insight p+p{margin-top:8px}
+.insight strong{color:var(--fg)}
+.footnote{margin-top:16px;font-size:10.5px;color:var(--fg-3);line-height:1.6;max-width:110ch}
+</style>
+
+<div class="wrap">
+<div class="header">
+  <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+    <span class="brand">ROQ</span><span class="header-sub">Wave Monitor</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <span class="pill bc"><span class="dot"></span>Trough</span>
+    <span class="pill def"><span class="dot"></span>Defensively Long</span>
+    <span class="pill" style="color:var(--warn);border-color:var(--warn);background:var(--warn-dim)"><span class="dot"></span>Trough, extreme volatility</span>
+    <span class="as-of">As of Nov 20, 2026 close</span>
+  </div>
+</div>
+
+<div class="stat-strip">
+  <div class="chip"><div class="chip-label">Wave phase</div><div class="chip-val b" style="font-size:15px;line-height:1.25">Trough</div><div class="chip-sub">In the trough, fifth day</div></div>
+  <div class="chip"><div class="chip-label">Positioning</div><div class="chip-val r" style="font-size:15px;line-height:1.25">Defensively Long</div><div class="chip-sub">Fully invested, unlevered</div></div>
+  <div class="chip"><div class="chip-label">Risk environment</div><div class="chip-val r">Elevated</div><div class="chip-sub">Extreme volatility at the trough</div></div>
+  <div class="chip"><div class="chip-label">Next 7 sessions</div><div class="chip-val">62% / 22%</div><div class="chip-sub">Higher / 2%+ drop (normal 60 / 15)</div></div>
+  <div class="chip"><div class="chip-label">ROQ portfolio (hypothetical)</div><div class="chip-val g">+18.3%</div><div class="chip-sub">YTD 2026, current rules all year</div></div>
+  <div class="chip"><div class="chip-label">S&amp;P 500 (SPY)</div><div class="chip-val">+1.2%</div><div class="chip-sub">YTD 2026</div></div>
+</div>
+
+<div class="main">
+<div class="col">
+
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-title">Wave cycle</span><span class="badge" id="arcBadge">Now: Peak</span></div>
+    <div class="arc-wrap">
+      <svg id="arcSvg" viewBox="0 0 640 200" role="img" aria-label="Wave cycle with seven phases; the current cycle position is Trough, still falling"></svg>
+      <div class="step-row">
+        <button id="backBtn" class="step-btn" type="button">&#9664; Back</button>
+        <button id="stepBtn" class="step-btn primary" type="button">Step &#9654;</button>
+        <button id="nowBtn" class="step-btn" type="button">Now</button>
+        <span id="stepLbl" class="mono" style="font-size:11px;color:var(--fg-3)"></span>
+      </div>
+      <div class="readout">
+        <div class="ro"><div class="ro-k">Higher in 7 sessions</div><div class="ro-v" id="roUp"></div></div>
+        <div class="ro"><div class="ro-k">2%+ drop in 7</div><div class="ro-v" id="roDn"></div></div>
+        <div class="ro"><div class="ro-k">Major shocks start here</div><div class="ro-v" id="roSp"></div></div>
+        <div class="ro"><div class="ro-k">Share of days</div><div class="ro-v" id="roDays"></div></div>
+      </div>
+      <p class="note" id="roNote"></p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-title">What usually follows</span><span class="badge">2006 to 2026</span></div>
+    <div class="cycle" id="cycle"></div>
+    <div class="panel-body">
+      <p class="lead">Each cell shows how often the S&amp;P 500 was <strong>higher 7 sessions later</strong> and, below it, how often it <strong>fell 2% or more</strong>, by wave phase and volatility conditions. On a typical day those figures are 60% and 15%. Today sits at <strong>the trough, still falling, in stressed conditions</strong>: about normal odds of a gain, with sharp drops about one and a half times as common as usual. The wave cycle and the statistical reading agree. The wave cycle and the statistical reading agree.</p>
+      <div class="tbl-wrap" style="margin-top:12px"><table class="map" id="map"></table></div>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--green-dim);outline:1px solid var(--green)"></span>Lower drop risk than normal</span>
+        <span><span class="sw" style="background:var(--red-dim);outline:1px solid var(--red)"></span>Drop risk 1.5x normal or more</span>
+        <span><span class="sw" style="border:1px solid var(--fg)"></span>Today</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-title">Volatility watch</span><span class="badge">Trough; session 15</span></div>
+    <div class="panel-body">
+      <p class="lead">Major volatility shocks have rarely started at the top of a wave. They tend to begin on the way down: about half began <strong>one to three weeks after the peak zone ended</strong>, a stretch that covers less than a third of trading days. This shows where risk has been concentrated, not a forecast of any single event. The wave left its peak zone on Nov 2. A major volatility shock began on Nov 5, session 4 after the peak zone ended: on the back side of the wave, as this framework describes, though a couple of sessions earlier than the stretch where most have started. Volatility eased slightly on Nov 6 and dropped back to the calm range on Nov 9.</p>
+      <div class="timeline" aria-label="Sessions since the peak zone ended">
+        <div class="tl-bar">
+          <div class="tl-seg" style="width:14%;background:var(--blue-dim)"></div>
+          <div class="tl-seg" style="width:17%;background:var(--bg-elevated)"></div>
+          <div class="tl-seg" style="width:33%;background:var(--red-dim)"></div>
+          <div class="tl-seg" style="width:36%;background:var(--bg-elevated)"></div>
+        </div>
+        <div class="tl-now" style="left:64%">now</div>
+        <div class="tl-tick" style="left:14%">peak ends</div>
+        <div class="tl-tick" style="left:31%">+6</div>
+        <div class="tl-tick" style="left:64%">+15</div>
+        <div class="tl-tick" style="left:96%">+25</div>
+      </div>
+      <div class="checks">
+        <div class="crow"><span class="ck">In the peak zone</span><span class="cv">No, ended Nov 2</span></div>
+        <div class="crow"><span class="ck">Sessions since the peak zone ended</span><span class="cv w">15 (shock began at 4)</span></div>
+        <div class="crow"><span class="ck">Internal momentum rolling over</span><span class="cv no">Yes, new low</span></div>
+        <div class="crow"><span class="ck">Volatility conditions</span><span class="cv no">Stressed, extreme</span></div>
+      </div>
+      <div class="ctitle" style="margin-top:14px">Where major volatility shocks started, by phase</div>
+      <div class="bars" id="spikes"></div>
+      <p class="note">Bar = share of 34 major volatility shocks (2006 to 2026) that began in each phase. Grey tick = that phase's share of all days.</p>
+    </div>
+  </div>
+
+  <div class="sig">
+    <strong>Data and significance.</strong> Figures come from daily closes for four major US equity index ETFs, 2006 to 2026 (about 5,200 trading days, via Barchart). The pattern in where volatility shocks begin, and the model's ability to separate calmer from rougher market periods, held in two separate decades, including one the model was never built on. These results describe the risk environment; they do not forecast individual events. The phase table is descriptive context, not a forecast; days within a phase overlap.
+  </div>
+
+</div>
+<div class="col">
+
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-title">What I'm watching</span></div>
+    <div class="panel-body">
+      <p class="lead">A fifth day in the trough, and the heaviest selling of this decline. The S&amp;P 500 fell more than 3.5% and the Nasdaq 100 fund more than 5.5%, and volatility reached its most extreme reading of the move. This is the kind of day the defensive mix is built for: the large-cap tilt lost about three quarters as much as a growth tilt. Internal momentum made another new low. Troughs that run this long often have a few more sessions in them, and momentum frequently bottoms after the wave itself has turned. What I'm watching for is the wave and momentum turning up together, with volatility coming back down. The model stays defensively long until that happens.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-title">Current read</span><span class="badge">Nov 20 close</span></div>
+    <div class="panel-body">
+      <div class="checks" style="margin-top:0">
+        <div class="crow"><span class="ck">Wave phase</span><span class="cv b">Trough</span></div>
+        <div class="crow"><span class="ck">Momentum</span><span class="cv w">New low, not yet turning</span></div>
+        <div class="crow"><span class="ck">Positioning</span><span class="cv r">Defensively Long</span></div>
+        <div class="crow"><span class="ck">Market exposure</span><span class="cv">Fully invested</span></div>
+        <div class="crow"><span class="ck">Leverage</span><span class="cv">Not active</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-title">Year to date, 2026</span><span class="badge">Hypothetical, through Nov 20</span></div>
+    <div class="panel-body">
+      <table class="perf">
+        <thead><tr><th></th><th>ROQ</th><th>SPY</th></tr></thead>
+        <tbody>
+          <tr class="live"><td>Return</td><td class="g">+18.28%</td><td>+1.16%</td></tr>
+          <tr><td>Outperformance</td><td class="g">+17.12pp</td><td></td></tr>
+          <tr><td>Sharpe</td><td>0.77</td><td>-0.14</td></tr>
+          <tr><td>Sortino</td><td>1.23</td><td>-0.19</td></tr>
+          <tr><td>Calmar</td><td>1.49</td><td>0.11</td></tr>
+          <tr><td>Max drawdown</td><td class="r">-13.95%</td><td class="r">-11.46%</td></tr>
+          <tr><td>Ann. volatility</td><td>21.63%</td><td>14.74%</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Hypothetical: the model's current rules applied to every trading day of 2026, Jan 2 to Nov 20, including the documented discretionary adjustments. The rules were updated in May 2026, so this is not the record actually achieved. Risk-free rate 4.5%; no trading or financing costs.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hdr"><span class="panel-title">Wave states</span><span class="badge">Always invested</span></div>
+    <div class="panel-body">
+      <div class="defs">
+        <div class="sdef">
+          <span class="pill ebp">EBP</span>
+          <span class="def-name">Elevated Bullish Probability</span>
+          <span class="def-mix">Growth tilt, leverage on</span>
+          <span class="def-txt">The most constructive stance, used early in a new wave when conditions are calm. Steps down as the wave matures or conditions deteriorate.</span>
+        </div>
+        <div class="sdef">
+          <span class="pill bc">FBP</span>
+          <span class="def-name">Favorable Bullish Probability</span>
+          <span class="def-mix">Growth tilt, unlevered</span>
+          <span class="def-txt">Riding the wave without leverage until it starts to roll over.</span>
+        </div>
+        <div class="sdef now">
+          <span class="pill def">DL</span>
+          <span class="def-name">Defensively Long</span>
+          <span class="def-mix">Large-cap tilt, unlevered</span>
+          <span class="def-txt">Still fully invested, shifted toward steadier large caps while the wave works through its decline and forms the next trough.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="footnote">
+  Historical frequencies are measured on an unlevered blend of four major US equity index ETFs. Wave phases and volatility conditions are defined by the model's proprietary internal measures, which are not disclosed. Results are year to date for 2026 (from the Dec 31, 2025 close). Historical frequencies are not a guarantee of future returns.
+  <p style="margin-top:10px;font-style:italic">Market analysis and this page were conducted and written with the assistance of AI analysis under human oversight.</p>
+  <p style="margin-top:6px;font-style:italic">The information provided here is for educational and informational purposes only and should not be considered financial advice. I am not a licensed financial advisor, and my portfolio may not be appropriate for your financial goals or risk tolerance. All investments involve risk, including the potential loss of principal. Historical data and market models are not indicative of future results. Past performance is not indicative of future results. Please consult with a licensed financial professional before making any investment decisions.</p>
+</div>
+</div>
+
+<script>
+const PHASES=['Trough, turning up','Rising, early','Rising, late','Peak','Falling from high','Falling, mid','Trough, still falling'];
+const NOW_PHASE=6, NOW_VOL=2; // statistical phase: drives the table, bars and readout odds
+const CYCLE_PHASE=6; // forward-only cycle position (display only): drives the arc marker
+// [up%, drop>=2% %, n] per volatility condition: calm, elevated, stressed
+const MAP=[
+ [[59,13,271],[36,44,109],[62,24,143]],
+ [[58,18,405],[73,10,77],[68,23,97]],
+ [[58,9,405],[66,9,95],[66,17,89]],
+ [[61,10,928],[67,17,234],[49,28,167]],
+ [[58,11,407],[66,16,82],[68,24,75]],
+ [[63,13,535],[57,25,127],[51,29,114]],
+ [[66,9,456],[53,27,165],[62,22,197]]
+];
+const NORMAL_DROP=15;
+// major-shock share, share of days
+const SPIKES=[[15,10],[9,11],[0,11],[6,26],[3,11],[18,15],[50,16]];
+
+const cyc=document.getElementById('cycle');
+PHASES.forEach((p,i)=>{
+  if(i){const a=document.createElement('span');a.className='carrow';a.textContent='›';cyc.appendChild(a);}
+  const s=document.createElement('span');s.className='cstep'+(i===NOW_PHASE?' on':'');s.textContent=p;cyc.appendChild(s);
+});
+
+const map=document.getElementById('map');
+let h='<thead><tr><th>Wave phase</th><th class="vb">Calm</th><th class="vb">Elevated</th><th class="vb">Stressed</th></tr></thead><tbody>';
+MAP.forEach((row,i)=>{
+  h+=`<tr><td class="ph${i===NOW_PHASE?' on':''}">${PHASES[i]}</td>`;
+  row.forEach(([up,dn,n],j)=>{
+    let cls='cell';
+    if(dn>=NORMAL_DROP*1.5) cls+=' bad'; else if(dn<=NORMAL_DROP*0.8) cls+=' good';
+    if(i===NOW_PHASE&&j===NOW_VOL) cls+=' now';
+    h+=`<td><div class="${cls}" title="${PHASES[i]}, n=${n} days"><span class="up">${up}%</span><span class="dn">${dn}% drop</span></div></td>`;
+  });
+  h+='</tr>';
+});
+map.innerHTML=h+'</tbody>';
+
+const sp=document.getElementById('spikes');
+const maxv=60;
+SPIKES.forEach(([s,d],i)=>{
+  sp.insertAdjacentHTML('beforeend',`<span class="lbl${i===NOW_PHASE?' on':''}" data-i="${i}">${PHASES[i]}</span><span class="track"><span class="fill" style="width:${s/maxv*100}%"></span><span class="base" style="left:${d/maxv*100}%"></span></span><span class="num">${s}%</span>`);
+});
+[...map.querySelectorAll('tbody tr')].forEach((tr,i)=>tr.dataset.i=i);
+[...cyc.querySelectorAll('.cstep')].forEach((s,i)=>s.dataset.i=i);
+
+// -- Wave cycle arc --
+(function(){
+  const NS='http://www.w3.org/2000/svg', svg=document.getElementById('arcSvg');
+  const W=640, L=40, R=600, MID=104, AMP=66;
+  const T=[0.07,0.21,0.35,0.5,0.65,0.79,0.93];
+  const X=t=>L+t*(R-L), Y=t=>MID+AMP*Math.cos(2*Math.PI*t);
+  const mk=(tag,a,p)=>{const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e;};
+  // band labels
+  mk('line',{x1:L,x2:R,y1:MID,y2:MID,stroke:'var(--border-hi)','stroke-dasharray':'3 4'});
+  const lab=(x,y,txt,anchor)=>{const t=mk('text',{x,y,'text-anchor':anchor||'middle','font-size':'10','font-family':'IBM Plex Mono, monospace',fill:'var(--fg-3)'});t.textContent=txt;return t;};
+  // risk window shading on the down-leg (spike zone)
+  let d='';
+  for(let k=0;k<=60;k++){const t=0.71+k*(0.26/60);d+=(k?'L':'M')+X(t).toFixed(1)+' '+Y(t).toFixed(1);}
+  mk('path',{d,fill:'none',stroke:'var(--red)','stroke-opacity':'0.28','stroke-width':'14','stroke-linecap':'round'});
+  lab(X(0.92),MID-10,'higher-risk zone');
+  // wave
+  d='';
+  for(let k=0;k<=120;k++){const t=k/120;d+=(k?'L':'M')+X(t).toFixed(1)+' '+Y(t).toFixed(1);}
+  mk('path',{d,fill:'none',stroke:'var(--fg-2)','stroke-width':'2'});
+  const nodes=[];
+  PHASES.forEach((p,i)=>{
+    const [up,dn]=MAP[i][NOW_VOL];
+    const col= dn>=NORMAL_DROP*1.5?'var(--red)':(dn<=NORMAL_DROP*0.8?'var(--green)':'var(--fg-2)');
+    const g=mk('g',{class:'arc-node',tabindex:'0',role:'button','aria-label':`${p}: ${up}% up, ${dn}% drop`});
+    mk('circle',{class:'ring',cx:X(T[i]),cy:Y(T[i]),r:13,fill:'none',stroke:'var(--fg)','stroke-width':'0'},g);
+    mk('circle',{cx:X(T[i]),cy:Y(T[i]),r:7,fill:col,stroke:'var(--bg-card)','stroke-width':'2'},g);
+    const short=['Trough up','Rise early','Rise late','Peak','Fall high','Fall mid','Trough down'][i];
+    const below = Y(T[i])<MID;
+    const t=mk('text',{x:X(T[i]),y:Y(T[i])+(below?-20:28),'text-anchor':'middle','font-size':'11','font-family':'IBM Plex Sans, sans-serif',fill:'var(--fg-2)'},g);
+    t.textContent=short;
+    g.addEventListener('click',()=>show(i));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(i);}});
+    nodes.push({g,t});
+  });
+  const nowTag=mk('text',{x:X(T[CYCLE_PHASE]),y:Y(T[CYCLE_PHASE])-36,'text-anchor':'middle','font-size':'10','font-weight':'600','font-family':'IBM Plex Mono, monospace',fill:'var(--fg)'});
+  nowTag.textContent='NOW';
+
+  let sel=null;
+  function show(i){
+    sel=i; const k=(i===null)?NOW_PHASE:i; const ring=(i===null)?CYCLE_PHASE:i;
+    nodes.forEach((n,j)=>{n.g.querySelector('circle.ring').setAttribute('stroke-width',j===ring?'2':'0');n.t.setAttribute('fill',j===ring?'var(--fg)':'var(--fg-2)');n.t.setAttribute('font-weight',j===ring?'600':'400');});
+    const [up,dn,n]=MAP[k][NOW_VOL], [s,dd]=SPIKES[k];
+    document.getElementById('roUp').textContent=up+'%';
+    document.getElementById('roDn').textContent=dn+'%';
+    document.getElementById('roDn').className='ro-v '+(dn>=NORMAL_DROP*1.5?'r':dn<=NORMAL_DROP*0.8?'g':'');
+    document.getElementById('roSp').textContent=s+'%';
+    document.getElementById('roSp').className='ro-v '+(s>dd*1.3?'r':s<dd*0.7?'g':'');
+    document.getElementById('roDays').textContent=dd+'%';
+    document.getElementById('roNote').textContent=`${PHASES[k]} in ${['calm','elevated','stressed'][NOW_VOL]} conditions (today): ${n} days, 2006 to 2026. A typical day is 60% higher and 15% drop.` + ((i===null&&CYCLE_PHASE!==NOW_PHASE)?` The wave cycle reads ${PHASES[CYCLE_PHASE]}; the figures shown use the statistical reading, ${PHASES[NOW_PHASE]}.`:'');
+    document.getElementById('stepLbl').textContent= i===null ? 'Showing: now' : `Showing: ${PHASES[k]}`;
+    document.getElementById('arcBadge').textContent= i===null ? `Now: ${PHASES[CYCLE_PHASE]}` : `Viewing: ${PHASES[k]}`;
+    document.querySelectorAll('.map tbody tr').forEach(tr=>tr.classList.toggle('sel',i!==null&&+tr.dataset.i===k));
+    document.querySelectorAll('.bars .lbl').forEach(l=>l.classList.toggle('sel',i!==null&&+l.dataset.i===k));
+    document.querySelectorAll('.cstep').forEach(c=>c.classList.toggle('sel',i!==null&&+c.dataset.i===k&&k!==NOW_PHASE));
+  }
+  const N=PHASES.length;
+  document.getElementById('stepBtn').addEventListener('click',()=>show(((sel===null?CYCLE_PHASE:sel)+1)%N));
+  document.getElementById('backBtn').addEventListener('click',()=>show(((sel===null?CYCLE_PHASE:sel)-1+N)%N));
+  document.getElementById('nowBtn').addEventListener('click',()=>show(null));
+  show(null);
+})();
+</script>
+
+<script>/* report height to an embedding page (Squarespace frame) */
+(function(){function send(){try{parent.postMessage({roqWaveHeight:document.documentElement.scrollHeight},"*")}catch(e){}}
+window.addEventListener("load",function(){send();setTimeout(send,800)});window.addEventListener("resize",send);
+try{new ResizeObserver(send).observe(document.body)}catch(e){}})();</script>
+</body></html>
