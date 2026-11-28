@@ -208,20 +208,20 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
     <span class="brand">ROQ</span><span class="header-sub">Wave Monitor</span>
   </div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-    <span class="pill bc"><span class="dot"></span>Trough, turning up</span>
+    <span class="pill bc"><span class="dot"></span>Rising, early</span>
     <span class="pill def"><span class="dot"></span>Defensively Long</span>
-    <span class="pill" style="color:var(--warn);border-color:var(--warn);background:var(--warn-dim)"><span class="dot"></span>Trough, turning up, stressed volatility</span>
-    <span class="as-of">As of Nov 25, 2026 close</span>
+    <span class="pill" style="color:var(--warn);border-color:var(--warn);background:var(--warn-dim)"><span class="dot"></span>Early rise, elevated volatility</span>
+    <span class="as-of">As of Nov 27, 2026 close</span>
   </div>
 </div>
 
 <div class="stat-strip">
-  <div class="chip"><div class="chip-label">Wave phase</div><div class="chip-val b" style="font-size:15px;line-height:1.25">Trough, turning up</div><div class="chip-sub">Climbing out of the trough zone</div></div>
+  <div class="chip"><div class="chip-label">Wave phase</div><div class="chip-val b" style="font-size:15px;line-height:1.25">Rising, early</div><div class="chip-sub">Early in a new up-leg</div></div>
   <div class="chip"><div class="chip-label">Positioning</div><div class="chip-val r" style="font-size:15px;line-height:1.25">Defensively Long</div><div class="chip-sub">Fully invested, unlevered</div></div>
-  <div class="chip"><div class="chip-label">Risk environment</div><div class="chip-val r">Elevated</div><div class="chip-sub">Stressed, ticking higher</div></div>
-  <div class="chip"><div class="chip-label">Next 7 sessions</div><div class="chip-val">62% / 24%</div><div class="chip-sub">Higher / 2%+ drop (normal 60 / 15)</div></div>
-  <div class="chip"><div class="chip-label">ROQ portfolio (hypothetical)</div><div class="chip-val g">+23.1%</div><div class="chip-sub">YTD 2026, current rules all year</div></div>
-  <div class="chip"><div class="chip-label">S&amp;P 500 (SPY)</div><div class="chip-val">+5.1%</div><div class="chip-sub">YTD 2026</div></div>
+  <div class="chip"><div class="chip-label">Risk environment</div><div class="chip-val r">Elevated</div><div class="chip-sub">Eased out of the stressed range</div></div>
+  <div class="chip"><div class="chip-label">Next 7 sessions</div><div class="chip-val">73% / 10%</div><div class="chip-sub">Higher / 2%+ drop (normal 60 / 15)</div></div>
+  <div class="chip"><div class="chip-label">ROQ portfolio (hypothetical)</div><div class="chip-val g">+25.2%</div><div class="chip-sub">YTD 2026, current rules all year</div></div>
+  <div class="chip"><div class="chip-label">S&amp;P 500 (SPY)</div><div class="chip-val">+6.8%</div><div class="chip-sub">YTD 2026</div></div>
 </div>
 
 <div class="main">
@@ -230,7 +230,7 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
   <div class="panel m-first">
     <div class="panel-hdr"><span class="panel-title">Wave cycle</span><span class="badge" id="arcBadge">Now: Peak</span></div>
     <div class="arc-wrap">
-      <svg id="arcSvg" viewBox="0 0 640 200" role="img" aria-label="Wave cycle with seven phases; the current cycle position is Trough, turning up"></svg>
+      <svg id="arcSvg" viewBox="0 0 640 200" role="img" aria-label="Wave cycle with seven phases; the current cycle position is Rising, early"></svg>
       <div class="step-row">
         <button id="backBtn" class="step-btn" type="button">&#9664; Back</button>
         <button id="stepBtn" class="step-btn primary" type="button">Step &#9654;</button>
@@ -251,7 +251,7 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
     <div class="panel-hdr"><span class="panel-title">What usually follows</span><span class="badge">2006 to 2026</span></div>
     <div class="cycle" id="cycle"></div>
     <div class="panel-body">
-      <p class="lead">Each cell shows how often the S&amp;P 500 was <strong>higher 7 sessions later</strong> and, below it, how often it <strong>fell 2% or more</strong>, by wave phase and volatility conditions. On a typical day those figures are 60% and 15%. The wave kept climbing out of its trough, and both readings still mark <strong>the trough, turning up, in stressed conditions</strong>: about normal odds of a gain, with sharp drops about one and a half times as common as usual.</p>
+      <p class="lead">Each cell shows how often the S&amp;P 500 was <strong>higher 7 sessions later</strong> and, below it, how often it <strong>fell 2% or more</strong>, by wave phase and volatility conditions. On a typical day those figures are 60% and 15%. The wave moved out of its trough into <strong>the early rise, in elevated conditions</strong>: better than normal odds of a gain, with sharp drops less common than usual.</p>
       <div class="tbl-wrap" style="margin-top:12px"><table class="map" id="map"></table></div>
       <div class="map-toggle"><span id="mapNote">Showing today's volatility conditions.</span><button id="mapAll" class="step-btn" type="button" aria-expanded="false">Show all</button></div>
       <div class="legend">
@@ -263,7 +263,7 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
   </div>
 
   <div class="panel m-third">
-    <div class="panel-hdr"><span class="panel-title">Volatility watch</span><span class="badge">Trough; session 18</span></div>
+    <div class="panel-hdr"><span class="panel-title">Volatility watch</span><span class="badge">Early rise; session 19</span></div>
     <div class="panel-body">
       <p class="lead">Major volatility shocks have rarely started at the top of a wave. They tend to begin on the way down: about half began <strong>one to three weeks after the peak zone ended</strong>, a stretch that covers less than a third of trading days. This shows where risk has been concentrated, not a forecast of any single event. The wave left its peak zone on Nov 2. A major volatility shock began on Nov 5, session 4 after the peak zone ended: on the back side of the wave, as this framework describes, though a couple of sessions earlier than the stretch where most have started. Volatility eased slightly on Nov 6 and dropped back to the calm range on Nov 9.</p>
       <div class="timeline" aria-label="Sessions since the peak zone ended">
@@ -273,7 +273,7 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
           <div class="tl-seg" style="width:33%;background:#C2504C"></div>
           <div class="tl-seg" style="width:36%;background:#3A4246"></div>
         </div>
-        <div class="tl-now" style="left:73%">now</div>
+        <div class="tl-now" style="left:76%">now</div>
         <div class="tl-tick" style="left:14%">peak ends</div>
         <div class="tl-tick" style="left:31%">+6</div>
         <div class="tl-tick" style="left:64%">+15</div>
@@ -282,9 +282,9 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
       <div class="legend" style="margin-top:14px"><span><span class="sw" style="background:#3F78C0"></span>Peak zone</span><span><span class="sw" style="background:#C2504C"></span>Higher-risk stretch, one to three weeks after the peak</span></div>
       <div class="checks">
         <div class="crow"><span class="ck">In the peak zone</span><span class="cv">No, ended Nov 2</span></div>
-        <div class="crow"><span class="ck">Sessions since the peak zone ended</span><span class="cv w">18 (shock began at 4)</span></div>
+        <div class="crow"><span class="ck">Sessions since the peak zone ended</span><span class="cv w">19 (shock began at 4)</span></div>
         <div class="crow"><span class="ck">Internal momentum rolling over</span><span class="cv ok">No, higher over three sessions</span></div>
-        <div class="crow"><span class="ck">Volatility conditions</span><span class="cv no">Stressed</span></div>
+        <div class="crow"><span class="ck">Volatility conditions</span><span class="cv w">Elevated</span></div>
       </div>
       <div class="ctitle" style="margin-top:14px">Where major volatility shocks started, by phase</div>
       <div class="bars" id="spikes"></div>
@@ -302,16 +302,16 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
   <div class="panel m-second">
     <div class="panel-hdr"><span class="panel-title">What I'm watching</span></div>
     <div class="panel-body">
-      <p class="lead">The wave climbed out of its trough zone today, a first step into a new up-leg, but internal momentum slipped after two strong sessions, so the two did not rise together. Prices were mixed again: small caps and the Dow gained while the S&amp;P 500 and the Nasdaq 100 fund dipped, and the large-cap tilt again lost less than a growth mix would have. Volatility rose and is still in the stressed range, which in this framework keeps the model defensively long; rising sessions only count toward stepping up once volatility settles below that range. What I want to see next is the wave and internal momentum rising together again with volatility coming down. Until then, the model stays defensively long.</p>
+      <p class="lead">A strong half session after the holiday. The wave moved into the early part of a new up-leg and internal momentum rose with it. Revised data also show internal momentum rising on Wednesday rather than slipping. All four funds gained, led by the Nasdaq 100 fund and small caps, so the large-cap tilt trailed a growth mix today. Volatility eased out of the stressed range for the first time since mid-November, so this is the first rising session that counts toward stepping up. One more like it on Monday would move the model out of its defensive stance from Tuesday. Until then, the model stays defensively long.</p>
     </div>
   </div>
 
   <div class="panel m-4">
-    <div class="panel-hdr"><span class="panel-title">Current read</span><span class="badge">Nov 25 close</span></div>
+    <div class="panel-hdr"><span class="panel-title">Current read</span><span class="badge">Nov 27 close</span></div>
     <div class="panel-body">
       <div class="checks" style="margin-top:0">
-        <div class="crow"><span class="ck">Wave phase</span><span class="cv b">Trough</span></div>
-        <div class="crow"><span class="ck">Momentum</span><span class="cv w">Paused after two rising sessions</span></div>
+        <div class="crow"><span class="ck">Wave phase</span><span class="cv b">Early rise</span></div>
+        <div class="crow"><span class="ck">Momentum</span><span class="cv g">Rising with the wave</span></div>
         <div class="crow"><span class="ck">Positioning</span><span class="cv r">Defensively Long</span></div>
         <div class="crow"><span class="ck">Market exposure</span><span class="cv">Fully invested</span></div>
         <div class="crow"><span class="ck">Leverage</span><span class="cv">Not active</span></div>
@@ -320,21 +320,21 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
   </div>
 
   <div class="panel m-5">
-    <div class="panel-hdr"><span class="panel-title">Year to date, 2026</span><span class="badge">Hypothetical, through Nov 25</span></div>
+    <div class="panel-hdr"><span class="panel-title">Year to date, 2026</span><span class="badge">Hypothetical, through Nov 27</span></div>
     <div class="panel-body">
       <table class="perf">
         <thead><tr><th></th><th>ROQ</th><th>SPY</th></tr></thead>
         <tbody>
-          <tr class="live"><td>Return</td><td class="g">+23.13%</td><td>+5.10%</td></tr>
-          <tr><td>Outperformance</td><td class="g">+18.03pp</td><td></td></tr>
-          <tr><td>Sharpe</td><td>0.96</td><td>0.14</td></tr>
-          <tr><td>Sortino</td><td>1.56</td><td>0.20</td></tr>
-          <tr><td>Calmar</td><td>1.86</td><td>0.50</td></tr>
+          <tr class="live"><td>Return</td><td class="g">+25.15%</td><td>+6.80%</td></tr>
+          <tr><td>Outperformance</td><td class="g">+18.35pp</td><td></td></tr>
+          <tr><td>Sharpe</td><td>1.03</td><td>0.26</td></tr>
+          <tr><td>Sortino</td><td>1.69</td><td>0.36</td></tr>
+          <tr><td>Calmar</td><td>2.02</td><td>0.66</td></tr>
           <tr><td>Max drawdown</td><td class="r">-13.95%</td><td class="r">-11.46%</td></tr>
-          <tr><td>Ann. volatility</td><td>21.94%</td><td>15.47%</td></tr>
+          <tr><td>Ann. volatility</td><td>21.95%</td><td>15.52%</td></tr>
         </tbody>
       </table>
-      <p class="note">Hypothetical: the model's current rules applied to every trading day of 2026, Jan 2 to Nov 25, including the documented discretionary adjustments. The rules were updated in May 2026, so this is not the record actually achieved. Risk-free rate 4.5%; no trading or financing costs.</p>
+      <p class="note">Hypothetical: the model's current rules applied to every trading day of 2026, Jan 2 to Nov 27, including the documented discretionary adjustments. The rules were updated in May 2026, so this is not the record actually achieved. Risk-free rate 4.5%; no trading or financing costs.</p>
     </div>
   </div>
 
@@ -376,8 +376,8 @@ table.map{border-collapse:separate;border-spacing:4px;width:100%;min-width:520px
 
 <script>
 const PHASES=['Trough, turning up','Rising, early','Rising, late','Peak','Falling from high','Falling, mid','Trough, still falling'];
-const NOW_PHASE=0, NOW_VOL=2; // statistical phase: drives the table, bars and readout odds
-const CYCLE_PHASE=0; // forward-only cycle position (display only): drives the arc marker
+const NOW_PHASE=1, NOW_VOL=1; // statistical phase: drives the table, bars and readout odds
+const CYCLE_PHASE=1; // forward-only cycle position (display only): drives the arc marker
 // [up%, drop>=2% %, n] per volatility condition: calm, elevated, stressed
 const MAP=[
  [[59,13,271],[36,44,109],[62,24,143]],
